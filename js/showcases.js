@@ -96,7 +96,7 @@ class FloatingButton {
         this.show_cases = show_cases
         this.button = $el("div", {
             id: "comfy-floating-button",
-            textContent: "☁️wym_test_menu ➕",
+            textContent: "☁️我的菜单➕",
             onmousedown: (e) => this.startDrag(e),
             onclick: (e) => this.showMenu(e),
         });
@@ -164,10 +164,7 @@ class FloatingButton {
     }
 
     async get_workflow_graph(file) {
-        if (file.startsWith("https://")) {
-            console.log("open BizyAir NEWS:", file);
-            window.open(file, '_blank');
-        } else if (file.endsWith(".json")) {
+        if (file.endsWith(".json")) {
             console.log("workflow file:", file);
             const exampleMenu = document.querySelector(".example-menu")
             if (exampleMenu) document.body.removeChild(exampleMenu);
