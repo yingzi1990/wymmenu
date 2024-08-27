@@ -1,10 +1,10 @@
 {
-    "FLUX": {
+    "一级菜单": {
         "头像生成": "3D头像Photomaker.json",
         "动画修复": "AnimateDiff 动画生成修复.json",
         "二维码生成": "minecraft二维码生成.json"
     },
-    "Remove the background from the image": "Q版拜年照一键生成.json",
-    "Super Resolution": "bizyair_showcase_realistic_superresolution.json",
-    "Recreate an existing image": "bizyair_flux_joycaption_img2img_workflow.json"
+    "Q版拜年照一键生成": "Q版拜年照一键生成.json",
+    "脸手修复": "脸手修复.json",
+    "龙飞凤舞头像": "龙飞凤舞头像.json"
 }
