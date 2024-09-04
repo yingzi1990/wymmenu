@@ -2,7 +2,7 @@ import json
 import os
 import urllib.error
 import urllib.request
-
+from .api.menu import get_menu
 import server
 from aiohttp import web
 
@@ -32,8 +32,9 @@ from server import PromptServer
 
 @PromptServer.instance.routes.get("/bizyair/showcases")
 async def set_api_key_page(request):
+    data = get_menu()
     return web.Response(
-        text=json.dumps(SHOW_CASES, ensure_ascii=False), content_type="application/json"
+        text=json.dumps(data, ensure_ascii=False), content_type="application/json"
     )
 
 

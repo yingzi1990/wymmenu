@@ -1,6 +1,7 @@
 import os
 import sys
-
+from .showcase import *
+from .api.menu import get_menu
 current_path = os.path.abspath(os.path.dirname(__file__))
 # src_path = os.path.join(current_path, "src")
 # if os.path.isdir(src_path):
@@ -8,6 +9,3 @@ current_path = os.path.abspath(os.path.dirname(__file__))
 
 WEB_DIRECTORY = "./js"
 
-from . import (
-    showcase,
-)
