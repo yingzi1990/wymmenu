@@ -3,8 +3,8 @@ import urllib.error
 import urllib.request
 import os
 
-def getmenu(base_url,pids):
-    url = f"{base_url}/api/Nodes/pageList?pids={pids}"
+def getworkflow(base_url,id):
+    url = f"{base_url}/api/Nodes/pageInfo?id={id}"
     try:
         response = urllib.request.urlopen(url, timeout=5)
         if response.getcode() == 200:
@@ -12,11 +12,11 @@ def getmenu(base_url,pids):
             res = json.loads(data)
             return res.get('data','')
         else:
-            print(f"Failed to fetch news.json: HTTP Status {response.getcode()}")
+            print(f"Failed to fetch file.json: HTTP Status {response.getcode()}")
             return {}
     except urllib.error.URLError as e:
-        print(f"Error fetching news.json: {e.reason}")
+        print(f"Error fetching file.json: {e.reason}")
         return {}
     except Exception as e:
-        print(f"Error fetching wymcomfy news.json: {str(e)}")
+        print(f"Error fetching file.json: {str(e)}")
         return {}

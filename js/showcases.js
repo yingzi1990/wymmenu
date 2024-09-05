@@ -141,12 +141,7 @@ class FloatingButton {
     }
 
     mapHtmls(item, key) {
-        if (typeof item === 'string') {
-            return $el("li", {
-                textContent: key,
-                onclick: async () => await this.get_workflow_graph(item)
-            });
-        } else {
+        if (typeof item === 'object') {
             const keys = Object.keys(item)
             return $el("li.has-child", {
                 textContent: key,
@@ -160,25 +155,28 @@ class FloatingButton {
             }, [
                 $el("ul.child-list", { style: { display: "none" } }, keys.map(e => this.mapHtmls(item[e], e)))
             ])
+        } else {
+            return $el("li", {
+                textContent: key,
+                onclick: async () => await this.get_workflow_graph(item)
+            });
         }
     }
 
     async get_workflow_graph(file) {
-        if (file.endsWith(".json")) {
-            console.log("workflow file:", file);
-            const exampleMenu = document.querySelector(".example-menu")
-            if (exampleMenu) document.body.removeChild(exampleMenu);
-            const response = await api.fetchApi("/bizyair/workflow", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ file: file }),
-            });
-            const showcase_graph = await response.json()
-            app.graph.clear()
-            await app.loadGraphData(showcase_graph)
-        }
+        console.log("workflow file:", file);
+        const exampleMenu = document.querySelector(".example-menu")
+        if (exampleMenu) document.body.removeChild(exampleMenu);
+        const response = await api.fetchApi("/wymcomfy/workflow", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ file: file }),
+        });
+        const showcase_graph = await response.json()
+        app.graph.clear()
+        await app.loadGraphData(showcase_graph)
     }
 
     async getMenuOptions() {
@@ -225,7 +223,7 @@ app.registerExtension({
             textContent: style,
             parent: document.head,
         });
-        const response = await api.fetchApi("/bizyair/showcases",
+        const response = await api.fetchApi("/wymcomfy/showcases",
             { method: "GET" });
         if (response.status === 200) {
             const show_cases = await response.json()
