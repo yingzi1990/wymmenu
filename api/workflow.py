@@ -2,9 +2,14 @@ import json
 import urllib.error
 import urllib.request
 import os
-
-def getworkflow(base_url,id):
-    url = f"{base_url}/api/Nodes/pageInfo?id={id}"
+from ..config.data import apiserver,config_path
+def getworkflow(id):
+    # 读取整个文件内容
+    with open(f"{config_path}/token.txt", 'r', encoding='utf-8') as file:
+        token = file.read()
+    if not token:
+        raise Exception("Token is empty")
+    url = f"{apiserver}/api/Nodes/pageInfo?id={id}&password={token}"
     try:
         response = urllib.request.urlopen(url, timeout=5)
         if response.getcode() == 200:
@@ -12,11 +17,8 @@ def getworkflow(base_url,id):
             res = json.loads(data)
             return res.get('data','')
         else:
-            print(f"Failed to fetch file.json: HTTP Status {response.getcode()}")
-            return {}
+            raise Exception(f"Failed to fetch file.json: HTTP Status {response.getcode()}")
     except urllib.error.URLError as e:
-        print(f"Error fetching file.json: {e.reason}")
-        return {}
+        raise Exception(f"Error fetching file.json: {e.reason}")
     except Exception as e:
-        print(f"Error fetching file.json: {str(e)}")
-        return {}
+        raise Exception(f"Error fetching file.json: {str(e)}")
