@@ -8,7 +8,7 @@ from .api.menu import getmenu
 from .api.workflow import getworkflow
 
 
-@PromptServer.instance.routes.get("/wymcomfy/showcases")
+@PromptServer.instance.routes.get("/wymcomfy/routesmenu")
 async def get_route_menu(request):
     return handle_request(getmenu, 1)
 

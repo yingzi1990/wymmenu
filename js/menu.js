@@ -91,12 +91,12 @@ const style = `
 }
 `;
 
-class FloatingButton {
-    constructor(show_cases) {
-        this.show_cases = show_cases
+class menuButton {
+    constructor(menu) {
+        this.menu = menu.menu
         this.button = $el("div", {
             id: "comfy-floating-button",
-            textContent: "☁️我的菜单➕",
+            textContent: "☁️"+menu.name+"➕",
             onmousedown: (e) => this.startDrag(e),
             onclick: (e) => this.showMenu(e),
         });
@@ -125,7 +125,7 @@ class FloatingButton {
 
         const exampleMenu = document.querySelector(".example-menu")
         if (exampleMenu) document.body.removeChild(exampleMenu);
-        const keys = Object.keys(this.show_cases)
+        const keys = Object.keys(this.menu)
         document.body.appendChild($el(
             "ul.example-menu",
             {
@@ -136,7 +136,7 @@ class FloatingButton {
                     zIndex: 1000,
                 }
             },
-            keys.map(item => this.mapHtmls(this.show_cases[item], item))
+            keys.map(item => this.mapHtmls(this.menu[item], item))
         ))
     }
 
@@ -180,7 +180,7 @@ class FloatingButton {
     }
 
     async getMenuOptions() {
-        return this.show_cases.map(item => ({
+        return this.menu.map(item => ({
             title: item.title,
             callback: async () => await this.get_workflow_graph(item.file),
         }));
@@ -217,18 +217,18 @@ class FloatingButton {
 }
 
 app.registerExtension({
-    name: "comfy.FloatingButton",
+    name: "wymcomfy.menuButton",
     async setup() {
         $el("style", {
             textContent: style,
             parent: document.head,
         });
-        const response = await api.fetchApi("/wymcomfy/showcases",
+        const response = await api.fetchApi("/wymcomfy/routesmenu",
             { method: "GET" });
         if (response.status === 200) {
-            const show_cases = await response.json()
-            console.log('http',show_cases);
-            new FloatingButton(show_cases);
+            const menu = await response.json()
+            console.log('http',menu);
+            new menuButton(menu);
         } else {
             console.log("error occurs when fetch the showcases:", await response.text())
         }
