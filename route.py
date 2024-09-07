@@ -6,7 +6,7 @@ from aiohttp import web
 from server import PromptServer
 from .api.menu import getmenu
 from .api.workflow import getworkflow
-
+from .api.login import login
 
 @PromptServer.instance.routes.get("/wymcomfy/routesmenu")
 async def get_route_menu(request):
@@ -24,6 +24,18 @@ async def get_route_file(request):
         )
     return handle_request(getworkflow, file_param)
 
+@PromptServer.instance.routes.post("/wymcomfy/login")
+async def route_login(request):
+    req = await request.json()
+    secret = req.get('secret')
+    if secret is None:
+        return web.Response(
+            text=json.dumps({"error": "Missing 'secret' parameter"}),
+            status=400,
+            content_type="application/json"
+        )
+    return handle_request(login, secret)
+
 def handle_request(handler_func, *args, **kwargs):
     try:
         data = handler_func(*args, **kwargs)
@@ -39,7 +51,7 @@ def handle_request(handler_func, *args, **kwargs):
         )
     except Exception as e:
         return web.Response(
-            text=json.dumps({"error": f"API Error: {str(e)}"}),
+            text=json.dumps({"error": f"{str(e)}"}),
             status=500,
             content_type="application/json"
         )

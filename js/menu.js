@@ -164,7 +164,6 @@ class menuButton {
     }
 
     async get_workflow_graph(file) {
-        console.log("workflow file:", file);
         const exampleMenu = document.querySelector(".example-menu")
         if (exampleMenu) document.body.removeChild(exampleMenu);
         const response = await api.fetchApi("/wymcomfy/workflow", {
@@ -175,10 +174,68 @@ class menuButton {
             body: JSON.stringify({ file: file }),
         });
         const showcase_graph = await response.json()
-        app.graph.clear()
-        await app.loadGraphData(showcase_graph)
+        console.log("showcase_graph:", showcase_graph);
+        if (showcase_graph.error) {
+            if (showcase_graph.error === "api error code:10001") {
+                this.showInputDialog(file)
+            }
+        }else{
+            app.graph.clear()
+            await app.loadGraphData(showcase_graph)
+        }
     }
-
+    async showInputDialog(file) {
+        // Create and show input dialog
+        const input = $el("input", { type: "text", placeholder: "请输入密钥激活使用" });
+        const confirmButton = $el("button", {textContent: "激活"});
+        const dialog = $el("div", {
+            style: {
+                position: "fixed",
+                top: "30%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                background: "white",
+                padding: "20px",
+                borderRadius: "5px",
+                boxShadow: "0 0 10px rgba(0,0,0,0.2)",
+                zIndex: "1001"
+            }
+        }, [
+            input,
+            confirmButton
+        ]);
+    
+        document.body.appendChild(dialog);
+    
+        confirmButton.onclick = async () => {
+            const value = input.value;
+            if (value.trim() !== '') {
+                const response = await api.fetchApi("/wymcomfy/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({secret: value}),
+                });
+                const result = await response.json();
+                if(result.error){
+                    alert(result.error);
+                }else{
+                    console.log("login success file:", file);
+                    this.get_workflow_graph(file)
+                    document.body.removeChild(dialog);
+                }
+            }
+        };
+    
+        // Close dialog on click outside
+        document.addEventListener('click', function onClickOutside(e) {
+            if (!dialog.contains(e.target)) {
+                document.body.removeChild(dialog);
+                document.removeEventListener('click', onClickOutside);
+            }
+        });
+    }
     async getMenuOptions() {
         return this.menu.map(item => ({
             title: item.title,
