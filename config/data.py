@@ -1,8 +1,8 @@
 import os
 
 version = "1000"
-apiserver = "http://192.168.1.11:8080"
-downserver = "http://192.168.1.11:8080"
+apiserver = "https://test.aiworkow.cn"
+downserver = "https://test.aiworkow.cn"
 
 # 获取当前文件的绝对路径
 config_file_data = os.path.abspath(__file__)
